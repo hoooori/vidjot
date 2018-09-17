@@ -29,7 +29,10 @@ app.use(methodOverride('_method'));
 // Middleware
 
 
-//Endpoints
+// *********************************** //
+// *********** Endpoints ************* //
+// *********************************** //
+
 // Index
 app.get('/', (req, res) => {
   const title = 'Welcome';
@@ -41,26 +44,27 @@ app.get('/about', (req, res) => {
   res.render('about');
 })
 
-// Idea Index
+// *********** Idea ************* //
+//Index
 app.get('/ideas', (req, res) => {
   Idea.find({}).sort({ date: 'desc' }).then(ideas => {
     res.render('ideas/index', { ideas: ideas }); //後にviewでideasをfor文で表示
   });
 });
 
-// Add Idea Form
+// New
 app.get('/ideas/add', (req, res) => {
   res.render('ideas/add');
 });
 
-// Edit Idea Form
+// Edit
 app.get('/ideas/edit/:id', (req, res) => {
   Idea.findOne({ _id: req.params.id }).then(idea => {
     res.render('ideas/edit', { idea: idea });
   });
 });
 
-// Create Form process
+// Create
 app.post('/ideas', (req, res) => {
   let errors = [];
 
@@ -87,7 +91,7 @@ app.post('/ideas', (req, res) => {
   }
 });
 
-// Edit Form process
+// Update
 app.put('/ideas/:id', (req, res) => {
   Idea.findOne({ _id: req.params.id }).then(idea => {
     //update values
@@ -97,7 +101,17 @@ app.put('/ideas/:id', (req, res) => {
   });
 });
 
-//Endpoints
+// Delete
+app.delete('/ideas/:id', (req, res) => {
+  Idea.remove({ _id: req.params.id }).then(() => {
+    res.redirect('/ideas');
+  });
+});
+// *********** Idea ************* //
+
+// *********************************** //
+// *********** Endpoints ************* //
+// *********************************** //
 
 // start server
 app.listen(port, () => {
