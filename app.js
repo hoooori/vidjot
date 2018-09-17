@@ -1,11 +1,12 @@
 // initial setting
 require('./models/Idea');
-const express    = require('express');
-const exphbs     = require('express-handlebars'); // UI library
-const mongoose   = require ('mongoose'); // mongodb
-const bodyParser = require('body-parser')
-const app        = express();
-const port       = 5000;
+const express        = require('express');
+const exphbs         = require('express-handlebars'); // UI library
+const mongoose       = require('mongoose'); // mongodb
+const bodyParser     = require('body-parser')
+const methodOverride = require('method-override')
+const app            = express();
+const port           = 5000;
 
 // MongoDB setting
 mongoose.Promise = global.Promise; // Map global promise - get rid of warning
@@ -14,14 +15,18 @@ mongoose.connect('mongodb://localhost/vidjot-dev', { useNewUrlParser: true }) //
 .catch(err => console.log(err)); // when fail
 const Idea = mongoose.model('ideas'); // Load Idea Model
 
-
-// Handlebars Middleware
+// Middleware
+// Handlebars
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
-// Body parser Middleware
+// Body parser
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// Method override
+app.use(methodOverride('_method'));
+// Middleware
 
 
 //Endpoints
@@ -55,7 +60,7 @@ app.get('/ideas/edit/:id', (req, res) => {
   });
 });
 
-// Process Form
+// Create Form process
 app.post('/ideas', (req, res) => {
   let errors = [];
 
@@ -81,6 +86,17 @@ app.post('/ideas', (req, res) => {
     new Idea(newUser).save().then(idea => { res.redirect('/ideas'); })
   }
 });
+
+// Edit Form process
+app.put('/ideas/:id', (req, res) => {
+  Idea.findOne({ _id: req.params.id }).then(idea => {
+    //update values
+    idea.title   = req.body.title,
+    idea.details = req.body.details
+    idea.save().then(idea => { res.redirect('/ideas'); })
+  });
+});
+
 //Endpoints
 
 // start server
