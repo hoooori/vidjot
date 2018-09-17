@@ -36,10 +36,17 @@ app.get('/about', (req, res) => {
   res.render('about');
 })
 
+// Idea Index
+app.get('/ideas', (req, res) => {
+  Idea.find({}).sort({ date: 'desc' }).then(ideas => {
+    res.render('ideas/index', { ideas: ideas }); //後にviewでideasをfor文で表示
+  });
+});
+
 // Add Idea Form
 app.get('/ideas/add', (req, res) => {
   res.render('ideas/add');
-})
+});
 
 // Process Form
 app.post('/ideas', (req, res) => {
@@ -55,7 +62,7 @@ app.post('/ideas', (req, res) => {
 
   if(errors.length > 0) {
     res.render('ideas/add', {
-      errors:  errors,
+      errors:  errors, //後にviewでideasをfor文で表示
       title:   req.body.title,
       details: req.body.details
     });
