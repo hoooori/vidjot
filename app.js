@@ -1,4 +1,5 @@
 // initial setting
+require('./models/Idea');
 const express  = require('express');
 const exphbs   = require('express-handlebars'); // UI library
 const mongoose = require ('mongoose'); // mongodb
@@ -9,7 +10,8 @@ const port     = 5000;
 mongoose.Promise = global.Promise; // Map global promise - get rid of warning
 mongoose.connect('mongodb://localhost/vidjot-dev', { useNewUrlParser: true }) // Connect
 .then(() => console.log('MongoDB Connected...')) // when success
-.catch(err => console.log(err)) // when fail
+.catch(err => console.log(err)); // when fail
+const Idea = mongoose.model('ideas'); // Load Idea Model
 
 
 // Handlebars
