@@ -3,8 +3,10 @@ require('./models/Idea');
 const express        = require('express');
 const exphbs         = require('express-handlebars'); // UI library
 const mongoose       = require('mongoose'); // mongodb
-const bodyParser     = require('body-parser')
-const methodOverride = require('method-override')
+const bodyParser     = require('body-parser');
+const methodOverride = require('method-override');
+const flash          = require('connect-flash');
+const session        = require('express-session');
 const app            = express();
 const port           = 5000;
 
@@ -15,7 +17,11 @@ mongoose.connect('mongodb://localhost/vidjot-dev', { useNewUrlParser: true }) //
 .catch(err => console.log(err)); // when fail
 const Idea = mongoose.model('ideas'); // Load Idea Model
 
-// Middleware
+
+
+// *********************************** //
+// *********** Middleware ************ //
+// *********************************** //
 // Handlebars
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
@@ -26,7 +32,26 @@ app.use(bodyParser.json())
 
 // Method override
 app.use(methodOverride('_method'));
-// Middleware
+
+// express session
+app.use(session({
+  secret:            'secret',
+  resave:            true,
+  saveUninitialized: true,
+}))
+
+//flash & Global variables
+app.use(flash());
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg   = req.flash('error_msg');
+  res.locals.error       = req.flash('error');
+  next();
+})
+// *********************************** //
+// *********** Middleware ************ //
+// *********************************** //
+
 
 
 // *********************************** //
@@ -87,7 +112,10 @@ app.post('/ideas', (req, res) => {
       title:   req.body.title,
       details: req.body.details
     }
-    new Idea(newUser).save().then(idea => { res.redirect('/ideas'); })
+    new Idea(newUser).save().then(idea => {
+      req.flash('success_msg', 'Video idea added');
+      res.redirect('/ideas');
+    })
   }
 });
 
@@ -97,13 +125,17 @@ app.put('/ideas/:id', (req, res) => {
     //update values
     idea.title   = req.body.title,
     idea.details = req.body.details
-    idea.save().then(idea => { res.redirect('/ideas'); })
+    idea.save().then(idea => {
+      req.flash('success_msg', 'Video idea updated');
+      res.redirect('/ideas');
+    })
   });
 });
 
 // Delete
 app.delete('/ideas/:id', (req, res) => {
   Idea.remove({ _id: req.params.id }).then(() => {
+    req.flash('success_msg', 'Video idea removed');
     res.redirect('/ideas');
   });
 });
@@ -112,6 +144,8 @@ app.delete('/ideas/:id', (req, res) => {
 // *********************************** //
 // *********** Endpoints ************* //
 // *********************************** //
+
+
 
 // start server
 app.listen(port, () => {

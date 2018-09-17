@@ -10,11 +10,14 @@
 </head>
 <body>
   <!-- navbar partial -->
-  {{> _navbar }}
+  {{> _navbar}}
   <!-- navbar partial -->
 
   <div class="container">
-    {{{ body }}}
+    <!-- flash partial -->
+    {{> _msg}}
+    <!-- flash partial -->
+    {{{body}}}
   </div>
 
   <!-- bootstrap -->
