@@ -1,5 +1,6 @@
 // ******** initial setting ******** //
 const express        = require('express');
+const path           = require('path');
 const exphbs         = require('express-handlebars'); // UI library
 const mongoose       = require('mongoose'); // mongodb
 const bodyParser     = require('body-parser');
@@ -30,8 +31,11 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 // Body parser
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Method override
 app.use(methodOverride('_method'));
@@ -41,7 +45,7 @@ app.use(session({
   secret:            'secret',
   resave:            true,
   saveUninitialized: true,
-}))
+}));
 
 //flash & Global variables
 app.use(flash());

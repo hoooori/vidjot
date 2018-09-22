@@ -5,10 +5,10 @@ module.exports = router;
 
 // Login
 router.get('/login', (req, res) => {
-  res.send('login');
+  res.render('users/login');
 });
 
 // Sign Up
 router.get('/register', (req, res) => {
-  res.send('register');
+  res.render('users/register');
 });
