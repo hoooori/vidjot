@@ -2,16 +2,21 @@
 const express        = require('express');
 const path           = require('path');
 const exphbs         = require('express-handlebars'); // UI library
-const mongoose       = require('mongoose'); // mongodb
-const bodyParser     = require('body-parser');
 const methodOverride = require('method-override');
 const flash          = require('connect-flash');
 const session        = require('express-session');
+const bodyParser     = require('body-parser');
+const passport       = require('passport');
+const mongoose       = require('mongoose'); // mongodb
 const app            = express();
 const port           = 5000;
+
 // routes
 const ideas = require('./routes/ideas');
 const users = require('./routes/users');
+
+// Passport Config
+require('./config/passport')(passport);
 // ******** initial setting ******** //
 
 

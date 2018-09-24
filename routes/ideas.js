@@ -3,7 +3,6 @@ const express  = require('express');
 const mongoose = require('mongoose');
 const router   = express.Router();
 const Idea     = mongoose.model('ideas');
-module.exports = router;
 
 //Index
 router.get('/', (req, res) => {
@@ -74,3 +73,5 @@ router.delete('/:id', (req, res) => {
     res.redirect('/ideas');
   });
 });
+
+module.exports = router;
