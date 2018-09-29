@@ -9,7 +9,8 @@ const bodyParser     = require('body-parser');
 const passport       = require('passport');
 const mongoose       = require('mongoose'); // mongodb
 const app            = express();
-const port           = 5000;
+const db             = require('./config/database');
+const port           = process.env.PORT || 5000;
 
 // routes
 const ideas = require('./routes/ideas');
@@ -23,7 +24,7 @@ require('./config/passport')(passport);
 
 // ******** MongoDB Setting ******** //
 mongoose.Promise = global.Promise; // Map global promise - get rid of warning
-mongoose.connect('mongodb://localhost/vidjot-dev', { useNewUrlParser: true }) // Connect
+mongoose.connect(db.mongoURI, { useNewUrlParser: true }) // Connect
 .then(() => console.log('MongoDB Connected...')) // when success
 .catch(err => console.log(err)); // when fail
 // ******** MongoDB Setting ******** //
